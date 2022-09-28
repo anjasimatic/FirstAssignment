@@ -7,6 +7,7 @@ public class CharacterController : MonoBehaviour
     [SerializeField] private PlayerTurn playerTurn;
     [SerializeField] private Rigidbody characterBody;
     [SerializeField] private float speed = 2f;
+    private bool isJumping;
 
     void Update()
     {
@@ -22,9 +23,10 @@ public class CharacterController : MonoBehaviour
                 transform.Translate(transform.forward * speed * Time.deltaTime * Input.GetAxis("Vertical"), Space.World);
             }
 
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Space) && !isJumping)
             {
                 Jump();
+                isJumping = true;
             }
         }
     }
@@ -32,6 +34,14 @@ public class CharacterController : MonoBehaviour
     private void Jump()
     {
         characterBody.AddForce(Vector3.up * 300f);
+    }
+
+    private void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.CompareTag("Ground"))
+        {
+            isJumping = false;
+        }
     }
 
 }
