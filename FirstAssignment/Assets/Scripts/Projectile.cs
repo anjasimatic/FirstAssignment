@@ -7,6 +7,7 @@ public class Projectile : MonoBehaviour
     [SerializeField] private float speed;
     [SerializeField] private Rigidbody projectileBody;
     private bool isActive;
+    private int damage = 1;
 
     public void Initialize(Vector3 direction)
     {
@@ -14,21 +15,21 @@ public class Projectile : MonoBehaviour
         projectileBody.AddForce(direction);
     }
 
+    void OnCollisionEnter(Collision collision)
+    {
+        GameObject collisionObject = collision.gameObject;
+
+        if(collisionObject.CompareTag("Player"))
+        {
+            collisionObject.GetComponent<PlayerHealth>().TakeDamage(damage);
+        }
+    }
+
     void Update()
     {
         if (isActive)
         {
             transform.Translate(transform.forward * speed * Time.deltaTime);
-        }
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        GameObject collisionObject = collision.gameObject;
-        DestructionFree destruction = collisionObject.GetComponent<DestructionFree>();
-        if (destruction == null)
-        {
-            Destroy(collisionObject);
         }
     }
 }

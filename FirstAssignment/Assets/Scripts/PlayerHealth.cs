@@ -1,27 +1,30 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class PlayerHealth : MonoBehaviour
 {
-    [SerializeField] Slider HealthBar;
-
-    float maxHealth = 4;
-    float currentHealth;
+    public int maxHealth = 5;
+    public int currentHealth;
+    public HealthBar healthBar;
 
     void Start()
     {
-        HealthBar.value = maxHealth;
-        currentHealth = HealthBar.value;
+        currentHealth = maxHealth;
+        healthBar.SetMaxHealth(maxHealth);
     }
 
-    void OnTriggerStay(Collider col)
+    void Update()
     {
-        if (col.gameObject.tag == "Projectile")
+        if (Input.GetKeyDown(KeyCode.X))
         {
-            HealthBar.value -= 1f;
-            currentHealth = HealthBar.value;
+            TakeDamage(1);
         }
+    }
+
+    public void TakeDamage (int damage)
+    {
+        currentHealth -= damage;
+        healthBar.SetHealth(currentHealth);
     }
 }
